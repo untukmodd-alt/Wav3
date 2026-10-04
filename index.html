@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8"><title>Wa v3</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#7b3f9e"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"><meta name="theme-color" content="#7b3f9e"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka:wght@400;600&family=Baloo+2:wght@400;600&family=Quicksand:wght@400;700&family=Comfortaa:wght@400;700&family=Pacifico&family=Chewy&family=Patrick+Hand&family=Caveat:wght@400;700&family=Lilita+One&display=swap">
 <style>
 :root{--bg:#f3effa;--pan:#fcfaff;--ink:#2d1b3d;--mut:#8d7ea3;--line:#e2d8f0;--acc:#7b3f9e;--gold:#b88a3e;--me1:#f6dfb0;--me2:#efbfcf;--meink:#3a1f33;--them:#fff;--chip:#ece4f7;--sh:0 4px 14px rgba(70,30,100,.12);--f:'Nunito',system-ui,sans-serif;--fs:16px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -169,6 +169,7 @@ $('#me').onclick=profSheet;$('#gs').onclick=setSheet;$('#gs').innerHTML=ic('set'
 function ping(){if(!S.set.snd)return;try{const a=ping.a||(ping.a=new(window.AudioContext||window.webkitAudioContext)()),o=a.createOscillator(),g=a.createGain(),n=a.currentTime;o.frequency.setValueAtTime(880,n);o.frequency.exponentialRampToValueAtTime(1320,n+.12);g.gain.setValueAtTime(.12,n);g.gain.exponentialRampToValueAtTime(.001,n+.25);o.connect(g);g.connect(a.destination);o.start();o.stop(n+.26)}catch(e){}}
 function setSheet(){mp=0;const m=S.me,T=(k,l)=>`<div class="tg" data-s="tg" data-k="${k}"><span>${l}</span><span class="sw ${S.set[k]?'on':''}"></span></div>`;
 sheet(`<h3>Pengaturan</h3><div class="pc"><div data-s="pic" data-t="me" style="position:relative;cursor:pointer">${av(m,92)}<span class="cam">${ic('image',16)}</span></div><input class="nm" id="mn" maxlength="24" value="${esc(m.name)}" placeholder="Namamu" style="text-align:center;margin:0"><input class="nm" id="mb" maxlength="60" value="${esc(m.bio)}" placeholder="Bio singkat" style="text-align:center;margin:0"></div>
+<div class="sec">Akun</div><button class="act" data-s="redeem">${ic('star')}Kode redeem</button>
 <div class="sec">Tema</div><div class="seg">${[['auto','Otomatis'],['light','Terang'],['dark','Gelap']].map(([v,l])=>`<button data-s="theme" data-v="${v}" class="${S.theme===v?'on':''}">${l}</button>`).join('')}</div>
 <div class="sec">Latar obrolan</div><div class="seg" style="flex-wrap:wrap">${['Titik','Polos','Garis','Gradasi','Emas'].map((l,i)=>`<button data-s="wall" data-v="${i}" class="${S.set.wall===i?'on':''}">${l}</button>`).join('')}</div>
 <div class="sec">Teks</div><button class="act" data-s="font">${ic('type')}Ganti font (${esc(S.font)})</button><label class="sz">Ukuran<input type="range" id="sz" min="14" max="20" value="${S.size}"></label>
@@ -184,7 +185,7 @@ const r={id:uid(),me:1,nm:m.nm,h:m.h,tt:m.tt,t:x,ts:m.ts,reply:m.rp,st:'sent'};G
 function renderList(){const T=S.tab||0,n=FR.filter(r=>r.to===ME&&r.st==='pending');
 $('#tabs').innerHTML=[['Obrolan',0],['Pesan',1],['Kontak',2]].map(([l,i])=>`<button data-tab="${i}" class="${T===i?'on':''}">${l}${i===1&&n.length?`<span class="bd">${n.length}</span>`:''}</button>`).join('');
 $('.sr').style.display=T?'none':'';const au=id=>{const u=GU[id]||{};return av({name:u.name||'?',pic:u.pic,h:u.h||200},46)};
-if(T===0){renderList0();const l=last(GC);$('#rows').insertAdjacentHTML('afterbegin',`<div class="crow" data-c="global">${av(GC,46)}<div class="ci"><b>Grup Chat Global</b><span>${l?esc((l.nm?l.nm+': ':'')+(l.t||'')):'Semua orang bisa ngobrol di sini'}</span></div></div><div class="crow" data-s2="redeem"><div class="av" style="width:46px;height:46px;background:linear-gradient(135deg,#d4141c,#7a0a12)">${ic('star',22)}</div><div class="ci"><b>Kode redeem</b><span>Tukar kode untuk title spesial</span></div></div>`);return}
+if(T===0){renderList0();const l=last(GC);$('#rows').insertAdjacentHTML('afterbegin',`<div class="crow" data-c="global">${av(GC,46)}<div class="ci"><b>Grup Chat Global</b><span>${l?esc((l.nm?l.nm+': ':'')+(l.t||'')):'Semua orang bisa ngobrol di sini'}</span></div></div>`);return}
 if(!DB){$('#rows').innerHTML=em('Belum terhubung ke server. Periksa internetmu lalu muat ulang halaman.');return}
 if(T===1)$('#rows').innerHTML=n.map(r=>`<div class="crow" data-u="${r.from}">${au(r.from)}<div class="ci"><b>${esc(r.fn)}</b><span>${esc(r.fn)} ingin berteman dengan mu?</span></div><div class="rq"><button class="ok" data-fr="${r.id}" data-v="accepted">Terima</button><button data-fr="${r.id}" data-v="declined">Tolak</button></div></div>`).join('')||em('Belum ada pesan.');
 else{const ids=FR.filter(r=>r.st==='accepted'&&(r.from===ME||r.to===ME)).map(r=>r.from===ME?r.to:r.from);$('#rows').innerHTML=ids.map(id=>{const u=GU[id]||{};return`<div class="crow" data-u="${id}">${au(id)}<div class="ci"><b>${esc(u.name||'Pengguna')}</b><span>${esc(u.bio||'')}</span></div></div>`}).join('')||em('Belum ada kontak. Sentuh nama seseorang di Grup Chat Global untuk minta berteman.')}}
@@ -229,7 +230,7 @@ if(x){const k=x.dataset.s2;if(k==='redeem')redeemSheet();else if(k==='redo'){con
 else if(f&&DB){DB.collection('fr').doc(f.dataset.fr).update({st:f.dataset.v}).catch(()=>toast('Gagal'));toast(f.dataset.v==='accepted'?'Diterima, ada di Kontak':'Ditolak')}
 else if(u&&DB)userSheet(u.dataset.u)});
 /* === KONFIGURASI FIREBASE: isi dengan config web app milikmu (Realtime Database + Anonymous Auth) === */
-const FB_CONFIG={apiKey:'',authDomain:'',databaseURL:'',projectId:'',appId:''};
+const FB_CONFIG={apiKey:'AIzaSyD4CMSWuTnnFupmJNu-AYssP4PDOQh5VzQ',authDomain:'wav3-a5d44.firebaseapp.com',databaseURL:'https://wav3-a5d44-default-rtdb.asia-southeast1.firebasedatabase.app',projectId:'wav3-a5d44',appId:'1:311314956038:web:907e2fdd544f83b079e887'};
 const ld=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)});
 (async()=>{try{if(!FB_CONFIG.databaseURL)return;const B='https://www.gstatic.com/firebasejs/10.12.2/firebase-';await ld(B+'app-compat.js');await Promise.all([ld(B+'auth-compat.js'),ld(B+'database-compat.js')]);
 firebase.initializeApp(FB_CONFIG);
@@ -258,6 +259,7 @@ if(k==='mem'){const n=$('#gn').value,i=b.dataset.id;gm=gm.includes(i)?gm.filter(
 if(k==='mk'){const n=$('#gn').value.trim();if(!n)return toast('Isi nama grup dulu');if(!gm.length)return toast('Pilih minimal 1 anggota');const g={id:uid(),name:n,grp:1,h:Math.random()*300|0,members:gm,msgs:[{id:uid(),me:0,sys:1,t:'Kamu membuat grup '+n,ts:Date.now(),st:'read'}]};gm=[];S.contacts.push(g);S.cur=g.id;save();closeSheet();renderList();renderChat(1);say(g,'Halo semuanya, selamat datang di grup!',900);return}
 if(k==='st'){S.me.st=b.dataset.v;save();profSheet();return}
 if(k==='gear')return setSheet();
+if(k==='redeem')return redeemSheet();
 if(k==='pin'||k==='mute'){c[k]=!c[k];save();contactSheet();renderList();return}
 if(k==='authtab'){authMode=+b.dataset.v;authSheet();return}
 if(k==='authgo'){doAuth(b);return}
