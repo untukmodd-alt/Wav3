@@ -303,7 +303,7 @@ const tok=await firebase.auth().currentUser.getIdToken(),base=FB_CONFIG.database
 for(const p of paths){const r=await fetch(base+'/'+p+'.json?shallow=true&auth='+tok);if(!r.ok)continue;const o=(await r.json())||{};
 for(const k of Object.keys(o)){if(n>=100)break;if(k.length<10)continue;const t=parseInt(k.slice(0,8),36);if(t&&t<cut){n++;firebase.database().ref(p+'/'+k).remove().catch(()=>{})}}}}catch(e){}}
 let PUSHOS=null;const OS_APP='804b0a75-d24e-4b3d-9160-a977c1827917';
-const PUSH_URL='';
+const PUSH_URL='https://wav3-push.untukmodd.workers.dev';
 async function notifyPush(to,text,g,title){try{if(!PUSH_URL||!(to||g)||!firebase.auth().currentUser)return;const idToken=await firebase.auth().currentUser.getIdToken();fetch(PUSH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken,to,g,name:title||(S.me&&S.me.name)||'Wav3',text:text||'Pesan baru'})}).catch(()=>{})}catch(e){}}
 function pushOn(){try{return !!(PUSHOS&&PUSHOS.Notifications.permission&&PUSHOS.User.PushSubscription.optedIn&&PUSHOS.User.PushSubscription.token)}catch(e){return false}}
 function initPush(){try{window.OneSignalDeferred=window.OneSignalDeferred||[];const base=location.pathname.replace(/[^/]*$/,'');
