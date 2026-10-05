@@ -276,7 +276,7 @@ const tok=await firebase.auth().currentUser.getIdToken(),base=FB_CONFIG.database
 for(const p of paths){const r=await fetch(base+'/'+p+'.json?shallow=true&auth='+tok);if(!r.ok)continue;const o=(await r.json())||{};
 for(const k of Object.keys(o)){if(n>=100)break;if(k.length<10)continue;const t=parseInt(k.slice(0,8),36);if(t&&t<cut){n++;firebase.database().ref(p+'/'+k).remove().catch(()=>{})}}}}catch(e){}}
 let PUSHOS=null;const OS_APP='804b0a75-d24e-4b3d-9160-a977c1827917';
-function pushOn(){try{return !!(PUSHOS&&PUSHOS.Notifications.permission)}catch(e){return false}}
+function pushOn(){try{return !!(PUSHOS&&PUSHOS.Notifications.permission&&PUSHOS.User.PushSubscription.optedIn&&PUSHOS.User.PushSubscription.token)}catch(e){return false}}
 function initPush(){try{window.OneSignalDeferred=window.OneSignalDeferred||[];const base=location.pathname.replace(/[^/]*$/,'');
 ld('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js').catch(()=>{});
 OneSignalDeferred.push(async OS=>{try{await OS.init({appId:OS_APP,serviceWorkerPath:base.slice(1)+'OneSignalSDKWorker.js',serviceWorkerParam:{scope:base},notifyButton:{enable:false}});PUSHOS=OS;if(ME)await OS.login(ME)}catch(e){console.error(e)}})}catch(e){}}
@@ -342,7 +342,7 @@ $('#sh').addEventListener('input',e=>{if(e.target.id==='fq')fl()});
 $('#sh').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;const k=b.dataset.s,c=cur();
 if(['clear','delc','reset','authout','rmf','blk'].includes(k)&&!b.dataset.cf){b.dataset.cf=1;b.lastChild.textContent='Yakin? Sentuh sekali lagi';return}
 if(k==='pic'){picT=b.dataset.t;$('#pf').click();return}
-if(k==='push'){if(!PUSHOS)return toast('Notifikasi belum siap, coba lagi sebentar');if(pushOn())return toast('Notifikasi sudah aktif');if(typeof Notification!=='undefined'&&Notification.permission==='denied')return toast('Izin diblokir. Aktifkan lewat setelan situs di Chrome');PUSHOS.Notifications.requestPermission().then(()=>{setSheet();toast(pushOn()?'Notifikasi aktif':'Izin tidak diberikan')}).catch(()=>toast('Gagal meminta izin'));return}
+if(k==='push'){if(!PUSHOS)return toast('Notifikasi belum siap, coba lagi sebentar');if(pushOn())return toast('Notifikasi sudah aktif');if(typeof Notification!=='undefined'&&Notification.permission==='denied')return toast('Izin diblokir. Aktifkan lewat setelan situs di Chrome');PUSHOS.Notifications.requestPermission().then(()=>PUSHOS.User.PushSubscription.optIn()).then(()=>new Promise(r=>setTimeout(r,3000))).then(()=>{setSheet();toast(pushOn()?'Notifikasi aktif':'Belum terdaftar di OneSignal, coba lagi')}).catch(()=>toast('Gagal meminta izin'));return}
 if(k==='font')return fontSheet();
 if(k==='clear'){c.msgs=[];save();closeSheet();renderChat();renderList();return}
 if(k==='delc'){S.contacts=S.contacts.filter(x=>x!==c);S.cur=null;save();closeSheet();$('#chat').classList.remove('open');renderChat();renderList();return}
